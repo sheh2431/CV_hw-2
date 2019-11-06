@@ -26,7 +26,7 @@ def PCA(input_data):
     # ---- plot the mean face ---- #
     plt.imshow(mean_face.reshape(origin_h, origin_w), cmap='gray')
     #plt.show()
-    #cv2.imwrite(output_folder + "mean_face.png", mean_face.reshape(origin_h, origin_w))
+    cv2.imwrite(output_folder + "mean_face.png", mean_face.reshape(origin_h, origin_w))
     # ----    end of plot     ---- # 
 
     diff = input_data[:,:] - np.tile(mean_face, (h, 1)) # training_set * (h*w)          280*2576
@@ -53,11 +53,11 @@ def PCA(input_data):
         plt.subplot(row, col, 1+i)
         #plt.tight_layout()
         plt.imshow(eigen_faces[i, :].real.reshape(origin_h, origin_w), cmap='gray')
-        #cv2.imwrite(output_folder + str(i) + "_eigenface.png", eigen_faces[i, :].real.reshape(origin_h, origin_w))
+        cv2.imwrite(output_folder + str(i+1) + "_eigenface.png", eigen_faces[i, :].real.reshape(origin_h, origin_w))
         #plt.xlabel("width")
         #plt.ylabel("height")
         #plt.title("The "+str(i+1)+"-th eigenface.")
-    #plt.show()
+    plt.show()
     # ----    end of plot   ---- #
     project = np.dot(k_eigen_vector, eigen_faces) + np.tile(mean_face, (h, 1))
     #w = np.array([np.dot(eigen_faces,i) for i in diff])
@@ -72,8 +72,8 @@ def PCA(input_data):
     plt.imshow(project[person_8_image_6,:].reshape(origin_h, origin_w), cmap='gray')
     plt.title("n=" + str(k) + "\nMSE: "+str(MSE))
     plt.show()
-    #file_name = "reconstruct_output/"+str(k)+".png"
-    #cv2.imwrite(file_name, project[person_8_image_6,:].reshape(origin_h, origin_w))
+    file_name = "reconstruct_output/"+str(k)+".png"
+    cv2.imwrite(file_name, project[person_8_image_6,:].reshape(origin_h, origin_w))
     return mean_face, eigen_faces, eigen_vector, w
 
 def testing(Test_input, mean_face, eigen_faces, w):
