@@ -26,7 +26,7 @@ def PCA(input_data):
     # ---- plot the mean face ---- #
     plt.imshow(mean_face.reshape(origin_h, origin_w), cmap='gray')
     #plt.show()
-    cv2.imwrite(output_folder + "mean_face.png", mean_face.reshape(origin_h, origin_w))
+    #cv2.imwrite(output_folder + "mean_face.png", mean_face.reshape(origin_h, origin_w))
     # ----    end of plot     ---- # 
 
     diff = input_data[:,:] - np.tile(mean_face, (h, 1)) # training_set * (h*w)          280*2576
@@ -34,7 +34,7 @@ def PCA(input_data):
     eigen_value, eigen_vector = np.linalg.eig(c_matrix) # eigen_value = training_set    280, 
                                                         # eigen_vector = training_set * training_set  280*280
     eigSortIndex = argsort(-eigen_value)
-    k_eigen_vector = np.zeros((training_set, k)).astype(dtype='float64')
+    k_eigen_vector = np.zeros((training_set, k))
     count = 0
     while (count < k):
         for i in range(training_set):
@@ -43,25 +43,20 @@ def PCA(input_data):
                 count+=1
                 break
     eigen_faces = np.array(np.dot(k_eigen_vector.T, diff))
-
-    #eigen_faces = np.dot(input_data.T, k_eigen_vector)
-    #eigen_faces = eigen_faces.T
     # ---- plot eigen_faces ---- #
     row = np.floor(sqrt(k))
     col = np.ceil(k/row)
-    for i in range(k):
-        plt.subplot(row, col, 1+i)
+    #for i in range(k):
+        #plt.subplot(row, col, 1+i)
         #plt.tight_layout()
-        plt.imshow(eigen_faces[i, :].real.reshape(origin_h, origin_w), cmap='gray')
-        cv2.imwrite(output_folder + str(i+1) + "_eigenface.png", eigen_faces[i, :].real.reshape(origin_h, origin_w))
+        #plt.imshow(eigen_faces[i, :].real.reshape(origin_h, origin_w), cmap='gray')
+        #cv2.imwrite(output_folder + str(i) + "_eigenface.png", eigen_faces[i, :].real.reshape(origin_h, origin_w))
         #plt.xlabel("width")
         #plt.ylabel("height")
         #plt.title("The "+str(i+1)+"-th eigenface.")
-    plt.show()
+    #plt.show()
     # ----    end of plot   ---- #
     project = np.dot(k_eigen_vector, eigen_faces) + np.tile(mean_face, (h, 1))
-    #w = np.array([np.dot(eigen_faces,i) for i in diff])
-    #print(w.shape)
     MSE = mean_squared_error(input_data[person_8_image_6, :],project[person_8_image_6,:])
 
     # ---- person_8_image_6 ---- # 
@@ -72,25 +67,14 @@ def PCA(input_data):
     plt.imshow(project[person_8_image_6,:].reshape(origin_h, origin_w), cmap='gray')
     plt.title("n=" + str(k) + "\nMSE: "+str(MSE))
     plt.show()
-    file_name = "reconstruct_output/"+str(k)+".png"
-    cv2.imwrite(file_name, project[person_8_image_6,:].reshape(origin_h, origin_w))
-    return mean_face, eigen_faces, eigen_vector, w
+    #file_name = "reconstruct_output/"+str(k)+".png"
+    #cv2.imwrite(file_name, project[person_8_image_6,:].reshape(origin_h, origin_w))
 
-def testing(Test_input, mean_face, eigen_faces, w):
-    print(mean_face.shape)
-    h, w = Test_input.shape
-    print(h, w)
-    test_diff = np.subtract(Test_input, np.tile(mean_face, (h, 1)))
-    print(test_diff.shape)
-    test_project = np.dot(eigen_faces, test_diff)
-    distance = w - test_project
-    print(distance)
-
-def loadImageSet(data_folder, s_img, e_img):
+def loadImageSet(data_folder):
 
     filenames = []
     for person in range(1, 41):
-        for imgs in range(s_img, e_img+1): 
+        for imgs in range(1, 8): 
             data_img = data_folder + '/' + str(person) + "_" + str(imgs) + ".png"
             filenames.append(data_img)
 
@@ -106,7 +90,5 @@ if __name__ == "__main__":
     output_folder = sys.argv[2]
     k = int(sys.argv[3])
     
-    FaceMat = loadImageSet(data_folder, 1, 7)
-    mean, eigen_faces, eigenvector, w = PCA(FaceMat)
-    #Test_FaceMat = loadImageSet(data_folder, 8, 10)
-    #testing(Test_FaceMat, mean, eigen_faces, w)
+    FaceMat = loadImageSet(data_folder)
+    PCA(FaceMat)
