@@ -12,6 +12,8 @@ from data import TestDataset
 
 if __name__ == "__main__":
     data_path, model_type, output = sys.argv[1], sys.argv[2], sys.argv[3]
+    if not os.path.exists("output"):
+        os.makedirs("output")
 
     if model_type == 'conv':
         model = ConvNet()

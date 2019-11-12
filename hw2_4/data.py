@@ -1,8 +1,8 @@
 import torch
 import torchvision.transforms as transforms
-from torch.utils.data import Dataset
 from torchvision.datasets import ImageFolder
 from PIL import Image
+from torch.utils.data import Dataset
 import glob, os
 
 def get_dataloader(folder,batch_size=32):
