@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     plt.subplot(2, 2, 1)
 
-    plt.title("Training Accuracy(final="+ str(round(vali_acc_lst[-1]*100, 2)) + "%)")
+    plt.title("Training Accuracy(final="+ str(round(train_acc_lst[-1]*100, 2)) + "%)")
     plt.plot(train_acc_lst, c='#0072BD')
     plt.xlabel("Epoch")
     plt.ylabel("Accuracy Rate")
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     plt.xlabel("Epoch")
     plt.ylabel("Loss Rate")
     plt.tight_layout()
-
+    plt.savefig(model_type + "_learning curve.png")
     plt.show()
 
     sys.exit()
